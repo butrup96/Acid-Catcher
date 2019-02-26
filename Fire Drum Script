@@ -1,0 +1,81 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FireDrum : MonoBehaviour {
+    [Header ("Set in Inspector")]
+    public GameObject acidPrefab, sawPrefab;
+
+    private GameController gameController;
+
+    public float speed = 1f;
+
+    private float leftRightEdge = 10.0f;
+
+    public float chanceToChangeDiretions = 0.01f;
+
+    public float chanceToDropSaw = 0.01f;
+
+    public float secondsBetweenAcidDrop = 1f;
+
+	// Use this for initialization
+	void Start () {
+ 
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        if (gameController.gameActive)
+        {
+            Vector3 pos = transform.position;
+            pos.x += speed * Time.deltaTime;
+            pos.x = Mathf.Clamp(pos.x, -leftRightEdge, leftRightEdge);
+            transform.position = pos;
+
+            if (pos.x < -leftRightEdge)
+            {
+                speed = Mathf.Abs(speed); // Making speed positive
+
+            }
+            else if (pos.x > leftRightEdge)
+            {
+                speed = -Mathf.Abs(speed);
+
+            }
+        }
+
+
+    }
+    private void FixedUpdate()
+    {
+        if(Random.value < chanceToChangeDiretions)
+        {
+            speed *= -1;
+        }
+    }
+
+
+    public void DropObject()
+    {
+        if (Random.value < chanceToDropSaw)
+        {
+            GameObject saw = Instantiate<GameObject>(sawPrefab);
+            saw.transform.position = this.transform.position;
+        }
+        else
+        {
+            GameObject acid = Instantiate<GameObject>(acidPrefab);
+            acid.transform.position = this.transform.position;
+        }
+
+        if (gameController.gameActive)
+        {
+            Invoke("DropObject", secondsBetweenAcidDrop);
+        }
+        
+
+    }
+
+}
