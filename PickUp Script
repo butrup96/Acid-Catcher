@@ -1,0 +1,17 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PickUp : MonoBehaviour {
+    public static float bottomY = -12f;
+
+    public int pointValue = 2;
+    // Update is called once per frame
+    void Update()
+    {
+        if (transform.position.y < bottomY)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+}
