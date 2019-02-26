@@ -1,0 +1,85 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameController : MonoBehaviour {
+
+    private int Score = 0;
+
+    public int maxScore = 20;
+
+    /// Controls activity of the game scene
+    public bool gameActive = false;
+
+    private GameObject startButton;
+
+    private FireDrum fireDrum;
+
+    private Text scoreText;
+
+    private Text gameOverText;
+
+    private GameObject gameOverPanel;
+
+
+    void Start() {
+        startButton = GameObject.Find("StartButton");
+        fireDrum = GameObject.Find("Fire Drum").GetComponent<FireDrum>();
+
+        scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
+        Score = 0;
+
+        gameActive = false;
+
+        gameOverPanel = GameObject.Find("GameOver");
+
+        gameOverText = GameObject.Find("GameOverText").GetComponent<Text>();
+
+        gameOverPanel.SetActive(false);
+    }
+
+
+    void Update() {
+
+    }
+
+
+    public void UpdateScore(int points) {
+        Score += points;
+        scoreText.text = "Score: " + Score;
+
+        if (Score >= maxScore) //player has won
+        {
+            gameOverText.text = "You are a Winner!";
+            StopGame();
+        }
+        else if (Score < 0) //player has lost
+        {
+            gameOverText.text = "Sucka!";
+            StopGame();
+        }
+
+    }
+
+    private void StopGame()
+    {
+        gameActive = false;
+        gameOverPanel.SetActive(true);
+        startButton.SetActive(true);
+
+    }
+    
+
+    public void StartGame()
+    {
+        Score = 0;
+        scoreText.text = "Score: " + Score.ToString();
+        gameActive = true;
+        fireDrum.DropObject();
+
+        startButton.SetActive(false);
+        gameOverPanel.SetActive(false);
+    }
+
+}
